@@ -18,11 +18,13 @@ Claude Code用のカスタムスキル集です。
 ### 方法1: ユーザーディレクトリにコピー（個人利用）
 
 ```powershell
-# Windows
+# Windows - スキルとコマンドをインストール
 xcopy /E /I "release-note" "%USERPROFILE%\.claude\skills\release-note"
+xcopy /E /I "commands" "%USERPROFILE%\.claude\commands"
 
 # Mac/Linux
 cp -r release-note ~/.claude/skills/
+cp -r commands/* ~/.claude/commands/
 ```
 
 ### 方法2: プロジェクトディレクトリに配置（チーム共有）
@@ -49,6 +51,8 @@ xcopy /E /I "path\to\release-note" ".claude\skills\release-note"
 ```
 Skills/
 ├── README.md                 # このファイル
+├── commands/                 # スラッシュコマンド
+│   └── release-note.md       # /release-note コマンド
 ├── release-note/             # リリースノート生成スキル
 │   ├── SKILL.md              # スキル定義
 │   └── templates/            # テンプレートファイル
@@ -68,6 +72,7 @@ Skills/
 ## 更新履歴
 
 ### 2025-12-25
+- `/release-note` スラッシュコマンドを追加
 - release-note スキルを追加
 - History.txt形式（GATS2120形式）に対応
 - CSVテンプレートを追加
