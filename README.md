@@ -69,4 +69,6 @@ Skills/
 
 ### 2025-12-25
 - release-note スキルを追加
+- History.txt形式（GATS2120形式）に対応
+- CSVテンプレートを追加
 - 初期リリース
