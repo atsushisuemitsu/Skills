@@ -15,7 +15,14 @@ Claude Code用のカスタムスキル集です。
 
 ## インストール方法
 
-### 方法1: ユーザーディレクトリにコピー（個人利用）
+### 方法1: インストーラーを使用（推奨）
+
+```powershell
+# install.bat をダブルクリック、または以下を実行
+.\install.bat
+```
+
+### 方法2: 手動コピー
 
 ```powershell
 # Windows - スキルとコマンドをインストール
@@ -27,7 +34,7 @@ cp -r release-note ~/.claude/skills/
 cp -r commands/* ~/.claude/commands/
 ```
 
-### 方法2: プロジェクトディレクトリに配置（チーム共有）
+### 方法3: プロジェクトディレクトリに配置（チーム共有）
 
 ```powershell
 # プロジェクトのルートで実行
