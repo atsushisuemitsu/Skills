@@ -1,10 +1,10 @@
-# Claude Code Skills Collection
+# Agent Skills Collection
 
-Claude Code用のカスタムスキル集です。
+Claude CodeとGitHub Copilot用のカスタムスキル集です。
 
 ## 概要
 
-このリポジトリには、Claude Codeで使用できるカスタムスキルが含まれています。
+このリポジトリには、Claude CodeとGitHub Copilotで使用できるカスタムスキルが含まれています。
 各スキルは特定のタスクを自動化し、開発効率を向上させます。
 
 ## スキル一覧
@@ -14,6 +14,34 @@ Claude Code用のカスタムスキル集です。
 | [release-note](./release-note/) | ソフトウェアリリースノート自動生成 | 利用可能 |
 
 ## インストール方法
+
+### GitHub Copilot（Windows）
+
+リポジトリをダウンロード・展開し、`install-copilot.bat` をダブルクリックしてください。PowerShellからも実行できます。
+
+```powershell
+.\install-copilot.bat
+```
+
+スキルとCSVテンプレートを `%USERPROFILE%\.copilot\skills\release-note` にコピーします。既存の同名ファイルは更新されます。BAT単体ではなく、隣の `release-note` フォルダも必要です。
+
+Copilot CLIでは `/skills reload` の後、`/skills info release-note` で認識を確認してください。VS Codeではウィンドウを再読み込みし、Copilotチャットで `/release-note` を指定して依頼します。
+
+```text
+/release-note スキルでリリースノートを作成してください。
+修正前: D:\Release\old
+修正後: D:\Release\new
+履歴: D:\Release\new\History.txt
+顧客: UMTC蘇州
+装置: G2128
+出力先: D:\Release\リリースノート.xlsm
+```
+
+出力先に既存のXLSMを指定すると、そのブックを更新します。RedMineへのログインやExcel編集に必要なツールは、使用する環境で用意してください。
+
+配置先・再読み込み手順: [GitHub公式ドキュメント](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills)、[VS Code公式ドキュメント](https://code.visualstudio.com/docs/agent-customization/agent-skills)。自動実行では `.\install-copilot.bat /nopause` で終了時のキー入力待ちを省略できます。
+
+### Claude Code
 
 ### 方法1: インストーラーを使用（推奨）
 
@@ -58,6 +86,8 @@ xcopy /E /I "path\to\release-note" ".claude\skills\release-note"
 ```
 Skills/
 ├── README.md                 # このファイル
+├── install.bat               # Claude Code用インストーラー
+├── install-copilot.bat       # GitHub Copilot用インストーラー
 ├── commands/                 # スラッシュコマンド
 │   └── release-note.md       # /release-note コマンド
 ├── release-note/             # リリースノート生成スキル
@@ -69,7 +99,7 @@ Skills/
 
 ## 要件
 
-- Claude Code CLI
+- Claude Code CLI、またはAgent Skillsに対応したGitHub Copilot CLI / VS Code
 - 各スキルの依存関係は個別のSKILL.mdに記載
 
 ## ライセンス
