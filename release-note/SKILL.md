@@ -1,10 +1,22 @@
 ---
 name: release-note
-description: ソフトウェアリリースノートを自動生成するスキル。修正前後のフォルダ比較、History.txt解析、RedMineチケット情報を統合し、既存のXLSMファイルへの書き込み、またはCSV形式での出力を行う。
+description: Release note generator (CSV template or existing XLSM only). ソフトウェアリリースノートを自動生成するスキル。修正前後のフォルダ比較、History.txt解析、RedMineチケット情報を統合し、既存のXLSMファイルへの書き込み、またはCSV形式での出力を行う。
 allowed-tools: Read, Glob, Grep, Bash, Write
 ---
 
 # Release Note Generator
+
+> ENCODING CHECK (read first): This file is UTF-8. If the Japanese text below looks garbled
+> (mojibake: meaningless CJK characters), do NOT guess the instructions and do NOT search the workspace
+> for old scripts or past release notes to imitate. Re-read this file as UTF-8 in a terminal,
+> for example PowerShell: `Get-Content -Raw -Encoding UTF8 "<full path of this SKILL.md>"`,
+> then follow it. The output is the existing .xlsm (or a copy of the latest previous release-note
+> .xlsm for the same customer/device, after asking the user) or the bundled CSV template only.
+> Never create a Markdown (.md) release note or a CSV with your own columns.
+> Always run the full workflow below. An existing CSV/MD for the same ticket is NOT a finished
+> output; do not just report it and stop. If no output path is given, first search for
+> "*SOFT-*-RP-*.xlsm" in the workspace (including docs folders) and ask the user
+> whether to copy the latest one as the new release note.
 
 ソフトウェアリリースノートを自動生成するスキルです。
 
@@ -30,21 +42,25 @@ allowed-tools: Read, Glob, Grep, Bash, Write
 |-----------|------|----------|
 | `--ticket` | RedMineチケット番号 | なし |
 | `--version` | ソフトウェアバージョン | History.txtから自動取得 |
-| `--output` | 出力ファイルの絶対パス（既存の `.xlsm` を指定すると、そのファイルを更新） | CSVのパスを自動生成 |
+| `--output` | 出力ファイルの絶対パス（既存の `.xlsm` を指定すると、そのファイルを更新） | 過去の同系統 `.xlsm` があれば複製して作成（確認後）、なければCSV |
 
 ## 処理フロー
+
+呼び出されたら、毎回このフローでリリースノートを作成する。作業フォルダに同じチケットのCSVやMarkdownが既にあっても完成品とみなさず、それを報告して終了しない（テンプレート構成でない過去の出力は参考にもしない）。
 
 1. **History.txt解析**: 最新の変更履歴を抽出
 2. **RedMineチケット情報取得**（--ticket指定時）: Playwrightでブラウザを開き、ログイン後にチケット情報を取得
 3. **フォルダ比較**: 修正前後のファイル差分を検出
 4. **お客様向けの文章にまとめる**: 「背景」「目的と適用範囲」「内容」「効果」の4項目を作成（各項目4行以内・300字以内、コード詳細は含まない）
-5. **ファイル出力**: 出力先を確認し、既存の `.xlsm` には直接書き込み、それ以外はCSVを生成（詳細は「出力先の選択とXLSM更新」参照）
+5. **ファイル出力**: 出力先を確認し、既存の `.xlsm` には直接書き込む。出力先が未指定なら、過去の同系統 `.xlsm` を複製して新規作成する（ユーザー確認後）。それ以外はCSVを生成（詳細は「出力先の選択とXLSM更新」参照）
 
 ## 出力先の選択とXLSM更新
 
 - `--output` またはユーザーが書き込み先として指定したパスの拡張子を確認する（大文字・小文字を区別しない）。
 - 出力先が既存の `.xlsm` ファイルの場合、そのブックを読み込み、同じパスへ保存する。
-- 出力先の指定がない場合、または `.csv` が指定された場合は、CSVテンプレートを使用する。
+- 出力先の指定がない場合は、作業フォルダ（`docs` 配下を含む）から同じ顧客・装置の既存リリースノート `.xlsm`（ファイル名に `リリースノート_` と `SOFT-[装置名]-RP-` を含むもの）を探す。見つかった場合は、最新のものを元に新しい `.xlsm` を作るか、ユーザーに確認する。了承されたら、新しいドキュメントID（`SOFT-[装置名]-RP-XXXX`）と概要をユーザーに確認し、元ファイルを `リリースノート_[顧客名]_[概要](SOFT-[装置名]-RP-XXXX).xlsm` として複製してから、複製先に「既存XLSMへの書き込み手順」で書き込む。元ファイルは変更しない。
+- 既存の `.xlsm` が見つからない場合、ユーザーがXLSMを使わないと答えた場合、または `.csv` が指定された場合は、CSVテンプレートを使用する。CSVはテンプレートの行・列構成をそのまま使い、独自の列構成にしない。
+- 出力はXLSMまたはCSVのみとする。Markdown（`.md`）などのリリースノートは作成しない。
 - `.xlsm` が指定されているのにファイルが存在しない、読み込めない、または保存できない場合は、原因を報告する。CSVへの切り替えや拡張子だけの変更は行わない。
 
 ### 既存XLSMへの書き込み手順

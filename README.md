@@ -23,7 +23,7 @@ Claude CodeとGitHub Copilot用のカスタムスキル集です。
 .\install-copilot.bat
 ```
 
-スキルとCSVテンプレートを `%USERPROFILE%\.copilot\skills\release-note` にコピーします。既存の同名ファイルは更新されます。BAT単体ではなく、隣の `release-note` フォルダも必要です。
+スキルとCSVテンプレートを `%USERPROFILE%\.copilot\skills\release-note` にコピーします。既存の同名ファイルは更新されます。VS Code の `files.encoding` が `shiftjis` でも文字化けしないよう、コピー後の `SKILL.md` は UTF-8（BOM付き）で保存します。`~/.agents/skills` や `~/.claude/skills` に同名の `release-note` があると VS Code がそちらを使う場合があるため、Copilot で使うものだけを残してください。BAT単体ではなく、隣の `release-note` フォルダも必要です。
 
 Copilot CLIでは `/skills reload` の後、`/skills info release-note` で認識を確認してください。VS Codeではウィンドウを再読み込みし、Copilotチャットで `/release-note` を指定して依頼します。
 
